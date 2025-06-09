@@ -1,3 +1,4 @@
 google-play-scraper
 pandas
 numpy
+vaderSentiment
