@@ -15,5 +15,5 @@ df.dropna(subset=['date'], inplace=True)
 print(f"After normalizing dates: {len(df)}")
 
 df = df[['review', 'rating', 'date', 'bank', 'source']]  
-df.to_csv('bank_reviews_cleaned.csv', index=False)
+df.to_csv('./data/bank_reviews_cleaned.csv', index=False)
 print("Cleaned data saved to bank_reviews_cleaned.csv")
