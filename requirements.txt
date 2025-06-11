@@ -2,3 +2,6 @@ google-play-scraper
 pandas
 numpy
 vaderSentiment
+skilearn
+spacy
+
