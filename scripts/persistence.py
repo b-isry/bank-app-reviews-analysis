@@ -16,29 +16,53 @@ dsn = oracledb.makedsn(
     int(os.getenv("ORACLE_PORT", 1521)),
     service_name=os.getenv("ORACLE_SERVICE_NAME", "XEPDB1")
 )
-connection = oracledb.connect(
-    user=os.getenv("ORACLE_USER"),
-    password=os.getenv("ORACLE_PASSWORD"),
-    dsn=dsn
-)
-cursor = connection.cursor()
 
-# Insert each review
-for index, row in df.iterrows():
-    bank_name = row['bank']
-    # Get bank_id
-    cursor.execute("SELECT id FROM banks WHERE name = :bank_name", bank_name=bank_name)
-    bank_id = cursor.fetchone()[0]
+try:
+    with oracledb.connect(
+        user=os.getenv("ORACLE_USER"),
+        password=os.getenv("ORACLE_PASSWORD"),
+        dsn=dsn
+    ) as connection:
+        with connection.cursor() as cursor:
+            for index, row in df.iterrows():
+                bank_name = row['bank']
+                
+                # Get bank_id
+                cursor.execute(
+                    "SELECT id FROM banks WHERE name = :bank_name",
+                    bank_name=bank_name
+                )
+                result = cursor.fetchone()
+                if not result:
+                    print(f"Warning: Bank '{bank_name}' not found in banks table. Skipping row {index}.")
+                    continue
 
-    # Insert review
-    cursor.execute("""
-        INSERT INTO reviews (review_text, rating, review_date, bank_id, source)
-        VALUES (:review_text, :rating, TO_DATE(:review_date, 'YYYY-MM-DD'), :bank_id, :source)
-    """, review_text=row['review'], rating=int(row['rating']),
-         review_date=row['date'], bank_id=bank_id, source=row['source'])
+                bank_id = result[0]
 
-connection.commit()
-cursor.close()
-connection.close()
+                # Insert review
+                cursor.execute("""
+                    INSERT INTO reviews (
+                        review_text,
+                        rating,
+                        review_date,
+                        bank_id,
+                        source
+                    ) VALUES (
+                        :review_text,
+                        :rating,
+                        TO_DATE(:review_date, 'YYYY-MM-DD'),
+                        :bank_id,
+                        :source
+                    )
+                """,
+                review_text=row['review'],
+                rating=int(row['rating']),
+                review_date=row['date'],
+                bank_id=bank_id,
+                source=row['source'])
 
-print("Data inserted successfully!")
+            connection.commit()
+    print("Data inserted successfully!")
+
+except oracledb.Error as e:
+    print("Error occurred while inserting data:", e)
