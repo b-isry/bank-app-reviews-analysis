@@ -17,6 +17,8 @@ bank-app-reviews-analysis/
 │   ├── scrape_reviews.py
 │   ├── preprocess_reviews.py
 │   ├── sentiment_vader.py
+|   ├── persistence.py
+|   ├── insights.py
 │   └── thematic_preprocessing.py
 ├── requirements.txt
 └── README.md
