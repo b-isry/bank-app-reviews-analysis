@@ -86,5 +86,30 @@ This script will:
 4.  Extract the top 20 TF-IDF keywords (unigrams and bigrams) for each bank from the `cleaned_review`.
 5.  Assign themes to each review based on a predefined dictionary of keywords associated with themes such as "Account Access Issues", "Transaction Performance", "User Interface & Experience", "Customer Support", and "Feature Requests".
 6.  Save the final DataFrame, including the `identified_theme` column, to `data/reviews_with_themes.csv`.
+## Generating Insights and Visualizations
 
+To summarize the analysis, `scripts/insights.py` can be run after the thematic analysis step. This script:
+- Calculates and displays top keywords for positive and negative reviews.
+- Compares sentiment scores and average ratings by bank.
+- Generates bar plots saved in the `plots/` directory.
+- Summarizes pain points and drivers for each bank.
+- Produces actionable recommendations for each bank, saved in `recommendations.md`.
+
+## Persisting Reviews to a Database
+
+If you wish to store the cleaned review data in an Oracle database, use `scripts/persistence.py`. This script reads from the cleaned CSV and inserts reviews into your database, mapping banks to their IDs. 
+You must:
+- Create a `.env` file in the project root with Oracle DB credentials and path to the CSV file (see script source for required variables).
+- Ensure your Oracle DB schema includes `banks` and `reviews` tables.
+
+## Example Output
+
+Sample output files include:
+- `data/reviews_with_themes.csv`: Reviews with sentiment and identified themes.
+- `plots/`: Contains images such as `commpound_score_per_bank.png` and `rating_per_bank.png`.
+- `recommendations.md`: Text recommendations for each bank based on analysis.
+
+## Requirements Note
+
+**Note:** In `requirements.txt`, change `skilearn` to `scikit-learn` if you encounter errors during installation.
 
