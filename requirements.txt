@@ -2,6 +2,9 @@ google-play-scraper
 pandas
 numpy
 vaderSentiment
-skilearn
+scikit-learn
 spacy
+pytest
+flake8
+# To use spaCy English model, run: python -m spacy download en_core_web_sm
 
